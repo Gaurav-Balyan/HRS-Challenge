@@ -30,10 +30,9 @@ export class HomeComponent implements OnInit {
         .subscribe(() => this.loadAllUsers());
   }
 
-  private loadAllUsers() {
+  loadAllUsers() {
     this.userService.getAll()
         .pipe(first())
         .subscribe(users => this.users = users);
   }
-
 }

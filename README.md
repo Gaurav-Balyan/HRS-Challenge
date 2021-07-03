@@ -3,8 +3,8 @@
 
 Welcome to the Health Recovery Solutions coding challenge. This is a basic login application using recent version of Angular and Typescript. Your challenge is to do the following:
 * Fix any compiling errors before running
-* Add an edit user feature using the mock backend to edit the user's name. You can implement this however you see fit.
-* Add some tests throughout the application either creating new test files or using the pre-built test files.
+* Add an edit user feature using the mock backend to edit the user's name and store a timestamp for each time the user is edited. You can implement this however you see fit and do not necessarily need to show the timestamps in the UI.
+* Add some tests throughout the application, including 3 - 5 tests in each of the existing pre-built test file as well as thoroughly testing all of your new functions (with new test files if needed).  
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
 
