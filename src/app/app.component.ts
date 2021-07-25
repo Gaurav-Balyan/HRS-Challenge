@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './services';
 import { User } from './models/user.model';
@@ -8,14 +8,15 @@ import { User } from './models/user.model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'The HRS Angular Coding Challenge';
+export class AppComponent implements OnInit {
   currentUser: User;
 
   constructor(
       private router: Router,
       private authenticationService: AuthenticationService
-  ) {
+  ) { }
+
+  ngOnInit(){
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
 
