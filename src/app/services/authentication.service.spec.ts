@@ -16,46 +16,67 @@ describe("AuthenticationService", () => {
     service = TestBed.get(AuthenticationService);
   });
 
-  xdescribe('Testing Authentication service', () => {
+  describe('Testing Authentication service', () => {
+    /**
+     * ? checks if service is created
+    */
     it('should be created', () => {
       service = TestBed.get(AuthenticationService);
       expect(service).toBeTruthy();
     });
 
-  //   it('should call the login method', () => {
-  //     const myspy = spyOn(service, 'login').and.callThrough();
-  //     service.login('johndoe','johndoe');
-  //     expect(myspy).toHaveBeenCalled();
-  //   });
+    /**
+     * ? mock another service
+    */
+    it('should call the login method', () => {
+      const myLoginSpy = spyOn(service, 'login');
+      service.login('johndoe','johndoe');
+      expect(myLoginSpy).toHaveBeenCalledWith('johndoe','johndoe');
+    });
 
-  //   it('should return the user after login is called', () => {
-  //     const mockuser = {
-  //       id: 1,
-  //       username: 'johndoe',
-  //       password: 'johndoe',
-  //       firstName: 'john',
-  //       lastName: 'doe',
-  //       token: 'abcd'
-  //     };
+    /**
+     * ? mocks local storage and service
+    */
+    it('should return the user after login is called', () => {
+      const mockuser = {
+        id: 1,
+        username: 'johndoe',
+        password: 'johndoe',
+        firstName: 'john',
+        lastName: 'doe',
+        token: 'abcd'
+      };
+      const localStorageSpy = spyOn(localStorage, 'setItem');
 
-  //     service.login('johndoe', 'johndoe').subscribe(user => {
-  //       expect(user.username).toEqual(mockuser.username);
-  //       expect(user.password).toEqual(mockuser.password);
-  //       expect(user.firstName).toEqual(mockuser.firstName);
-  //       expect(user.lastName).toEqual(mockuser.lastName);
-  //     });
+      service.login('johndoe', 'johndoe').subscribe(user => {
+        expect(localStorageSpy).toHaveBeenCalled();
+        expect(localStorageSpy).toHaveBeenCalledWith('currentUser', JSON.stringify(mockuser));
+        expect(user.username).toEqual(mockuser.username);
+        expect(user.password).toEqual(mockuser.password);
+        expect(user.firstName).toEqual(mockuser.firstName);
+        expect(user.lastName).toEqual(mockuser.lastName);
+      });
 
-  //     const req = httpTestingController.expectOne('http://localhost:4000/users/authenticate');
+      const req = httpTestingController.expectOne('http://localhost:4000/users/authenticate');
+      expect(req.request.method).toEqual('POST');
+      req.flush(mockuser);
+    });
 
-  //     expect(req.request.method).toEqual('POST');
+    /**
+     * ? checks if getter is accessible
+    */
+    it('should get the currentUserValue from getter', () => {
+      const user = service.currentUserValue;
+      expect(user).toBeDefined();
+    });
 
-  //     req.flush(mockuser);
-  //   });
-
-  //   it('should call the logout method', () => {
-  //     const myspy = spyOn(service, 'logout').and.callThrough();
-  //     service.logout();
-  //     expect(myspy).toHaveBeenCalled();
-  //   });
+    /**
+     * ? checks if local storage is mocked
+    */
+    it('should call the logout method', () => {
+      const localStorageSpy = spyOn(localStorage, 'removeItem');
+      service.logout();
+      expect(localStorageSpy).toHaveBeenCalled();
+    });
   });
 });

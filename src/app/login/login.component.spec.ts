@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 
-fdescribe('LoginComponent', () => {
+describe('LoginComponent', () => {
   let component: LoginComponent;
   let router: Router;
   let fixture: ComponentFixture<LoginComponent>;
@@ -23,9 +23,7 @@ fdescribe('LoginComponent', () => {
       return this.currentUserSubject.value;
     }
 
-    login() {
-
-    }
+    login() { }
   };
 
   beforeEach(async(() => {
@@ -83,21 +81,39 @@ fdescribe('LoginComponent', () => {
   /**
    * ? checks if ngOnit have been called
   */
-   it('ngOnIt should be called', () => {
+   it('should be able to call ngOnit method', () => {
+    router = TestBed.get(Router);
+    const routerSpy = spyOn(router, 'navigate');
+    spyOnProperty(authService, 'currentUserValue').and.returnValue(true);
+    component.ngOnInit();
+    expect(component.loginForm).toBeDefined();
+    expect(routerSpy).toHaveBeenCalled();
+  });
+
+  /**
+   * ? checks if ngOnit have been called
+  */
+   it('should be able to call ngOnit method and cover the else path', () => {
+    router = TestBed.get(Router);
+    const routerSpy = spyOn(router, 'navigate');
+    spyOnProperty(authService, 'currentUserValue').and.returnValue(false);
     component.ngOnInit();
     expect(component.loginForm).toBeDefined();
   });
 
+  /**
+   * ? checks if router.navigate have been called
+  */
   it('should be navigated to home if user is already authenticated', async() => {
-    router = TestBed.get(Router);
-    const routerSpy = spyOn(router, 'navigate');
     authService.currentUserValue;
     expect(authService.currentUserValue.username).toContain('TestUserName');
     expect(authService.currentUserValue).toBeDefined();
     expect(authService.currentUserValue).toBeTruthy();
-    // expect(routerSpy).toHaveBeenCalled();
   });
 
+  /**
+   * ? checks if onSubmit can be called
+  */
   it('should be able to call onSubmit method when form is submitted', () => {
     fixture.detectChanges();
     spyOn(component, 'onSubmit');
@@ -106,7 +122,10 @@ fdescribe('LoginComponent', () => {
     expect(component.onSubmit).toHaveBeenCalledTimes(1);
   });
 
-  it('form should not be submitted if invalid', () => {
+  /**
+   * ? checks if form is invalid
+  */
+  it('should not be able to submit if form is invalid', () => {
     fixture.detectChanges();
     component.loginForm.controls['username'].setValue('');
     component.loginForm.controls['password'].setValue('');
@@ -114,7 +133,10 @@ fdescribe('LoginComponent', () => {
     component.onSubmit();
   });
 
-  it('form should be submitted if valid', () => {
+  /**
+   * ? checks if form is valid
+  */
+  it('should be able to submit form if valid', () => {
     router = TestBed.get(Router);
     const routerSpy = spyOn(router, 'navigate');
     const form = new FormBuilder();
@@ -124,17 +146,25 @@ fdescribe('LoginComponent', () => {
     expect(component.loginForm.valid).toBeTruthy();
     const authSpy = spyOn(authService, 'login').and.returnValue(of('http://someurl'));
     component.onSubmit();
+    expect(authSpy).toHaveBeenCalled();
     expect(routerSpy).toHaveBeenCalled();
   });
 
-  // it('error case should be handled if error occured in submitting a form', () => {
-  //   const form = new FormBuilder();
-  //   fixture.detectChanges();
-  //   component.loginForm.controls['username'].setValue("test");
-  //   component.loginForm.controls['password'].setValue("123456789");
-  //   expect(component.loginForm.valid).toBeTruthy();
-  //   const authSpy = spyOn(authService, 'login').and.returnValue(of(throwError('Error!')));
-  //   component.onSubmit();
-  //   expect(component.loading).toBe(false);
-  // });
+  /**
+   * ? handles the error case when an observable throws an error
+  */
+  it('should be able to handled error case if error occured in submitting a form', () => {
+    const form = new FormBuilder();
+    fixture.detectChanges();
+    component.loginForm.controls['username'].setValue("test");
+    component.loginForm.controls['password'].setValue("123456789");
+    expect(component.loginForm.valid).toBeTruthy();
+    const authSpy = spyOn(authService, 'login').and.callFake(() => {
+      return throwError('Error!');
+    });
+    component.onSubmit();
+    fixture.detectChanges();
+    expect(authSpy).toHaveBeenCalled();
+    expect(component.loading).toBe(false);
+  });
 });

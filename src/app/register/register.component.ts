@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { UserService, AuthenticationService } from '../services';
+import { UserService } from '../services';
 
 @Component({ templateUrl: 'register.component.html' })
 export class RegisterComponent implements OnInit {
@@ -16,11 +16,9 @@ export class RegisterComponent implements OnInit {
   constructor(
       private formBuilder: FormBuilder,
       private router: Router,
-      private authenticationService: AuthenticationService,
       private activatedRoute: ActivatedRoute,
       private userService: UserService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.initializeForm();
@@ -34,7 +32,6 @@ export class RegisterComponent implements OnInit {
         this.isEditMode = false;
       }
     });
-
   }
 
   // need to initialize in both add/edit case

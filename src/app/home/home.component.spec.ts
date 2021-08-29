@@ -4,10 +4,13 @@ import { HomeComponent } from './home.component';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AuthenticationService, UserService } from '../services';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { empty, from, observable, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { User } from '../models/user.model';
 
+/**
+ * ? stub for Authentication Service
+*/
 export class AuthenticationServiceStub {
   user = {
     id: 1,
@@ -23,6 +26,9 @@ export class AuthenticationServiceStub {
   }
 }
 
+/**
+ * ? stub for User Service
+*/
 export class UserServiceStub {
   user = {
     id: 1,
